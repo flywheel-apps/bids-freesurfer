@@ -132,7 +132,7 @@ def create_command(context, log):
     try:
 
         # Set the actual gear command:
-        command = [context.gear_dict['COMMAND']]
+        command = ['/usr/bin/python3.4',context.gear_dict['COMMAND']]
 
         # 3 positional args: bids path, output dir, 'participant'
         # This should be done here in case there are nargs='*' arguments
@@ -140,6 +140,10 @@ def create_command(context, log):
         command.append(context.gear_dict['bids_path'])
         command.append(context.gear_dict['output_analysisid_dir'])
         command.append(context.config['gear-analysis-level'])
+
+        # tell it where to find the license
+        command.append('--license_file')
+        command.append('/opt/freesurfer/license.txt')
 
         # Put command into gear_dict so arguments can be added in args.
         context.gear_dict['command_line'] = command
@@ -242,6 +246,11 @@ def execute(context, log):
             utils.dry_run.pretend_it_ran(context)
 
         if ok_to_run:
+
+            # Create output directory
+            log.info('Creating ' + context.gear_dict['output_analysisid_dir'])
+            os.mkdir(context.gear_dict['output_analysisid_dir'])
+
             # Run the actual command this gear was created for
             result = sp.run(context.gear_dict['command_line'], 
                         env = context.gear_dict['environ'])
