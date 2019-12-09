@@ -164,7 +164,7 @@ def create_command(context, log):
     except Exception as e:
         context.gear_dict['errors'].append(e)
         log.critical(e)
-        log.exception('Error in creating and validating command.',)
+        log.exception('Error in creating and validating command.')
 
 
 def set_up_data(context, log):
@@ -219,7 +219,7 @@ def set_up_data(context, log):
     except Exception as e:
         context.gear_dict['errors'].append(e)
         log.critical(e)
-        log.exception('Error in BIDS download and validation.',)
+        log.exception('Error in BIDS download and validation.')
 
 
 def execute(context, log):
@@ -331,7 +331,8 @@ if __name__ == '__main__':
 
     create_command(context, log)
 
-    set_up_data(context, log)
+    if len(context.gear_dict['errors']) == 0:
+        set_up_data(context, log)
 
     execute(context, log)
 
