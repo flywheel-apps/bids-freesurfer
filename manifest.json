@@ -1,13 +1,13 @@
 {
   "name": "bids-freesurfer",
-  "label": "BIDS Freesurfer>: Freesurfer recon-all BIDS App",
+  "label": "BIDS Freesurfer: Freesurfer recon-all BIDS App",
   "description": "BIDS-Apps/Freesurfer (6.0.1-5) This app implements surface reconstruction using Freesurfer. It reconstructs the surface for each subject individually and then creates a study specific template. In case there are multiple sessions the Freesurfer longitudinal pipeline is used (creating subject specific templates) unless instructed to combine data across sessions.  The current Freesurfer version is based on: freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz.",
-  "version": "0.0.0_6.0.1-5",
+  "version": "0.0.1_6.0.1-5",
   "custom": {
-    "docker-image": "flywheel/bids-freesurfer:0.0.0_6.0.1-5",
+    "docker-image": "flywheel/bids-freesurfer:0.0.1_6.0.1-5",
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/bids-freesurfer:0.0.0_6.0.1-5"
+      "image": "flywheel/bids-freesurfer:0.0.1_6.0.1-5"
     },
     "flywheel": {
       "suite": "BIDS Apps"
@@ -44,11 +44,11 @@
     },
     "stages": {
       "default": "autorecon-all",
-      "description": "{autorecon1,autorecon2,autorecon2-cp,autorecon2-wm,autorecon-pial,autorecon3,autorecon-all,all} [{autorecon1,autorecon2,autorecon2-cp,autorecon2-wm,autorecon-pial,autorecon3,autorecon-all,all} ...] Autorecon stages to run.",
+      "description": "{autorecon1,autorecon2,autorecon2-cp,autorecon2-wm,autorecon-pial,autorecon3,autorecon-all,all} [{autorecon1,autorecon2,autorecon2-cp,autorecon2-wm,autorecon-pial,autorecon3,autorecon-all,all} ...] Autorecon stages to run (space separated list).",
       "type": "string"
     },
     "steps": {
-      "description": "{cross-sectional,template,longitudinal} [{cross-sectional,template,longitudinal} ...] Longitudinal pipeline steps to run.",
+      "description": "{cross-sectional,template,longitudinal} [{cross-sectional,template,longitudinal} ...] Longitudinal pipeline steps to run (space separated list).",
       "optional": true,
       "type": "string"
     },
@@ -99,36 +99,33 @@
     },
     "parcellations": {
       "default": "aparc",
-      "description": "{aparc,aparc.a2009s} [{aparc,aparc.a2009s} ...] Group2 option: cortical parcellation(s) to extract stats from.",
+      "description": "{aparc,aparc.a2009s} [{aparc,aparc.a2009s} ...] Group2 option: cortical parcellation(s) to extract stats from (space separated list).",
       "type": "string"
     },
     "measurements": {
       "default": "thickness",
-      "description": "{area,volume,thickness,thicknessstd,meancurv,gauscurv,foldind,curvind} [{area,volume,thickness,thicknessstd,meancurv,gauscurv,foldind,curvind} ...] Group2 option: cortical measurements to extract stats for.",
-      "type": "string"
-    },
-    "bids_validator_config": {
-      "description": "BIDS_VALIDATOR_CONFIG JSON file specifying configuration of bids-validator: See https://github.com/INCF/bids-validator for more info",
-      "optional": true,
+      "description": "{area,volume,thickness,thicknessstd,meancurv,gauscurv,foldind,curvind} [{area,volume,thickness,thicknessstd,meancurv,gauscurv,foldind,curvind} ...] Group2 option: cortical measurements to extract stats for (space separated list).",
       "type": "string"
     },
     "skip_bids_validator": {
+      "default": false,
       "description": "skips bids validation",
       "type": "boolean"
     },
     "3T": {
       "description": "enables the two 3T specific options that recon-all supports: nu intensity correction params, and the special schwartz atlas",
+      "optional": true,
       "type": "boolean"
     },
     "gear-analysis-level": {
       "default": "participant",
       "description": "Level of the analysis that will be performed. Multiple participant level analyses can be run independently (in parallel) using the same output_dir. 'group1' creates study specific group template. 'group2' exports group stats tables for cortical parcellation, subcortical segmentation a table with euler numbers.",
       "type": "string",
-                        "enum": [
-                                "participant",
-                                "group1",
-                                "group2"
-                        ]
+      "enum": [
+        "participant",
+        "group1",
+        "group2"
+      ]
     },
     "gear-abort-on-bids-error": {
       "default": false,
@@ -183,7 +180,9 @@
     }   
   },
   "environment": {
-    "PYTHONUNBUFFERED": "1"
+    "PYTHONUNBUFFERED": "1",
+    "VIRTUAL_ENV": "/opt/venv",
+    "PATH": "/opt/venv/bin:/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   },
   "command": "run.py",
   "author": "http://surfer.nmr.mgh.harvard.edu/",
