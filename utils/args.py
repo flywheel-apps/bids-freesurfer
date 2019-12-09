@@ -55,42 +55,71 @@ def validate(context):
     Gives errors (and raises exceptions) for settings that are violations 
     """
 
-    log.debug('')
 
     param_list = context.gear_dict['param_list']
-    log.info('TODO: check param_list: ' + repr(param_list))
 
-    # TODO Must be a space-separated list of these: 
-    # {autorecon1,autorecon2,autorecon2-cp,autorecon2-wm,autorecon-pial,autorecon3,autorecon-all,all} [{autorecon1,autorecon2,autorecon2-cp,autorecon2-wm,autorecon-pial,autorecon3,autorecon-all,all} ...] Autorecon stages to run.
-    # TODO (check for others in manifest)
+    log.info('Checking param_list: ' + repr(param_list))
 
-    # TODO Must be a space-separated list of these`
-    #"parcellations": {
-    #  "default": "aparc",
-    #  "description": "{aparc,aparc.a2009s} [{aparc,aparc.a2009s} ...] Group2 option: cortical parcellation(s) to extract stats from.",
-    #  "type": "string"
-    #},
+    I_must_not_go_on = False
 
-    # TODO this too
-    # "measurements": {
-    #   "default": "thickness",
-    #   "description": "{area,volume,thickness,thicknessstd,meancurv,gauscurv,foldind,curvind} [{area,volume,thickness,thicknessstd,meancurv,gauscurv,foldind,curvind} ...] Group2 option: cortical measurements to extract stats for.",
-    #   "type": "string"
-    # },
+    # all must be one of these strings
+    if 'stages' in param_list:
 
-    # Test for input existence
-    # if not op.exists(params['i']):
-    #    raise Exception('Input File Not Found')
+        stages = param_list['stages'].split()
 
-    # Tests for specific problems/interactions that can raise exceptions or log warnings
-    # if ('betfparam' in params) and ('nononlinreg' in params):
-    #    if(params['betfparam']>0.0):
-    #        raise Exception('For betfparam values > zero, nonlinear registration is required.')
+        for stage in stages:
 
-    # if ('s' in params.keys()):
-    #    if params['s']==0:
-    #        log.warning(' The value of ' + str(params['s'] + \
-    #                    ' for -s may cause a singular matrix'))
+            if stage not in ['autorecon1','autorecon2','autorecon2-cp',
+                             'autorecon2-wm','autorecon-pial','autorecon3',
+                             'autorecon-all','all']:
+                msg = 'Invalid stage "' + stage + '"'
+                context.gear_dict['errors'].append(msg)
+                log.critical(msg)
+                I_must_not_go_on = True
+
+    # all must be one of these strings
+    if 'steps' in param_list:
+
+        steps = param_list['steps'].split()
+
+        for step in steps:
+
+            if step not in ['cross-sectional','template','longitudinal']:
+                msg = 'Invalid step "' + step + '"'
+                context.gear_dict['errors'].append(msg)
+                log.critical(msg)
+                I_must_not_go_on = True
+
+    # all must be one of these strings
+    if 'parcellations' in param_list:
+
+        parcellations = param_list['parcellations'].split()
+
+        for parc in parcellations:
+
+            if parc not in ['aparc','aparc.a2009s']:
+                msg = 'Invalid parc "' + parc + '"'
+                context.gear_dict['errors'].append(msg)
+                log.critical(msg)
+                I_must_not_go_on = True
+
+    # all must be one of these strings
+    if 'measurements' in param_list:
+
+        measurements = param_list['measurements'].split()
+
+        for measure in measurements:
+
+            if measure not in ['area','volume','thickness','thicknessstd',
+                               'meancurv','gauscurv','foldind','curvind']:
+                msg = 'Invalid measure "' + measure + '"'
+                context.gear_dict['errors'].append(msg)
+                log.critical(msg)
+                I_must_not_go_on = True
+
+    if I_must_not_go_on:
+        log.exception('Configuration error.')
+        raise Exception('Configuration error.')
 
 
 def build_command(context):
