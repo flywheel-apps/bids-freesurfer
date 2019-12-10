@@ -145,6 +145,12 @@ def create_command(context, log):
         command.append('--license_file')
         command.append('/opt/freesurfer/license.txt')
 
+        # If a bids validator config file was provided, add the path
+        file_path = context.get_input_path('bids_validator_config')
+        if file_path:
+            command.append('--bids_validator_config')
+            command.append(file_path)
+
         # Put command into gear_dict so arguments can be added in args.
         context.gear_dict['command_line'] = command
 
