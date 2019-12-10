@@ -2,12 +2,12 @@
   "name": "bids-freesurfer",
   "label": "BIDS Freesurfer: Freesurfer recon-all BIDS App",
   "description": "BIDS-Apps/Freesurfer (6.0.1-5) This app implements surface reconstruction using Freesurfer. It reconstructs the surface for each subject individually and then creates a study specific template. In case there are multiple sessions the Freesurfer longitudinal pipeline is used (creating subject specific templates) unless instructed to combine data across sessions.  The current Freesurfer version is based on: freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz.",
-  "version": "0.0.3_6.0.1-5",
+  "version": "0.0.5_6.0.1-5",
   "custom": {
-    "docker-image": "flywheel/bids-freesurfer:0.0.3_6.0.1-5",
+    "docker-image": "flywheel/bids-freesurfer:0.0.5_6.0.1-5",
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/bids-freesurfer:0.0.3_6.0.1-5"
+      "image": "flywheel/bids-freesurfer:0.0.5_6.0.1-5"
     },
     "flywheel": {
       "suite": "BIDS Apps"
@@ -27,6 +27,11 @@
     },
     "freesurfer_license": {
       "description": "FreeSurfer license file, provided during registration with FreeSurfer. This file will by copied to the $FSHOME directory and used during execution of the Gear.",
+      "base": "file",
+      "optional": true
+    },
+    "bids_validator_config": {
+      "description": "JSON file specifying the configuration of bids-validator: See https://github.com/bids-standard/bids-validator#configuration for more info",
       "base": "file",
       "optional": true
     }
