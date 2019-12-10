@@ -34,7 +34,8 @@ def zip_intermediate_selected(context):
         # Name of zip file has <subject> and <analysis>
         subject = context.gear_dict['subject_code']
         analysis_id = context.destination['id']
-        file_name = 'fmriprep_work_selected_' + subject + '_' + \
+        gear_name = context.manifest_json['name']
+        file_name = gear_name + '_work_selected_' + subject + '_' + \
                     analysis_id + '.zip'
         dest_zip = os.path.join(context.output_dir,file_name)
 
@@ -79,7 +80,8 @@ def zip_all_intermediate_output(context):
     # Name of zip file has <subject> and <analysis>
     subject = context.gear_dict['subject_code']
     analysis_id = context.destination['id']
-    file_name = 'fmriprep_work_' + subject + '_' + analysis_id + '.zip'
+    gear_name = context.manifest_json['name']
+    file_name = gear_name + '_work_' + subject + '_' + analysis_id + '.zip'
     dest_zip = os.path.join(context.output_dir,file_name)
 
     work_path, work_dir = os.path.split(context.work_dir)

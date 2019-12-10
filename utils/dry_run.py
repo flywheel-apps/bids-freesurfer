@@ -20,8 +20,8 @@ def pretend_it_ran(context):
 
     log.info('Creating fake output in ' + path)
 
-    files = [path + 'fmriprep_wf/d3.js',
-             path + 'reportlets/fmriprep/sub-TOME3024/anat/' + \
+    files = [path + 'somedir/d3.js',
+             path + 'reportlets/somecmd/sub-TOME3024/anat/' + \
              'sub-TOME3024_desc-about_T1w.html']
 
     for ff in files:
@@ -39,8 +39,8 @@ def pretend_it_ran(context):
 
     log.info('Creating fake output in ' + path)
 
-    files = [path + 'fmriprep/logs/CITATION.md',
-             path + 'fmriprep/sub-TOME3024/ses-Session2/anat/' + \
+    files = [path + 'somedir/logs/CITATION.md',
+             path + 'somedir/sub-TOME3024/ses-Session2/anat/' + \
              'sub-TOME3024_ses-Session2_acq-MPR_from-orig_to-T1w_mode-image_xfm.txt',
              path + 'freesurfer/fsaverage/mri/subcort.prob.log']
 
@@ -64,7 +64,7 @@ def pretend_it_ran(context):
     </p>
     </body>
     </html>"""
-    ff = path + 'fmriprep/sub-TOME3024.html'
+    ff = path + 'somedir/sub-TOME3024.html'
     with open(ff,'w') as fp:
         fp.write(html)
     log.debug('Creating: ' + ff)

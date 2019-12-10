@@ -26,7 +26,8 @@ def zip_output(context):
 
     analysis_id = context.destination['id']
 
-    file_name = 'fmriprep_' + name + '_' + analysis_id + '.zip'
+    gear_name = context.manifest_json['name']
+    file_name = gear_name + '_' + name + '_' + analysis_id + '.zip'
 
     dest_zip = os.path.join(context.output_dir,file_name)
 
@@ -38,7 +39,7 @@ def zip_output(context):
 
         log.debug('Output directory exists: ' + full_path)
 
-        # fmriprep output went into output/analysis_id/...
+        # output went into output/analysis_id/...
         os.chdir(context.output_dir)
 
         log.info(
