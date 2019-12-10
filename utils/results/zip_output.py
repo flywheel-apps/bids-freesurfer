@@ -16,13 +16,13 @@ def zip_output(context):
 
     # Set Zip file "name": either project, subject, or session name
     if context.gear_dict['run_level'] == 'project':
-        name = context.gear_dict['project_label']
+        name = context.gear_dict['project_label_safe']
 
     elif context.gear_dict['run_level'] == 'subject':
-        name = context.gear_dict['subject_code'] 
+        name = context.gear_dict['subject_code_safe']
 
     elif context.gear_dict['run_level'] == 'session':
-        name = context.gear_dict['session_label']
+        name = context.gear_dict['session_label_safe']
 
     analysis_id = context.destination['id']
 

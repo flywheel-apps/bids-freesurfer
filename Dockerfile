@@ -1,4 +1,3 @@
-# editme: change this file as needed
 # Use the latest Python 3 docker image
 FROM bids/freesurfer:v6.0.1-5
 
@@ -43,9 +42,6 @@ RUN pip3.6 install flywheel-sdk==10.4.1 \
     rm -rf /root/.cache/pip
 
 #    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# could add pybids
-# The last line above is to help keep the docker image smaller
 
 # Make directory for flywheel spec (v0)
 ENV FLYWHEEL /flywheel/v0
