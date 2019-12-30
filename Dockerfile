@@ -16,10 +16,10 @@ RUN npm install -g bids-validator@1.3.12
 
 RUN apt-get  update && \
     apt-get install -y software-properties-common && \
-    add-apt-repository ppa:jonathonf/python-3.6
+    add-apt-repository ppa:deadsnakes/ppa
 
-# Tried this one too
-#    add-apt-repository ppa:deadsnakes/ppa
+# got error on this one
+#    add-apt-repository ppa:jonathonf/python-3.6
 
 RUN apt-get update && \
     apt-get install -y python3.6 && \
