@@ -51,6 +51,11 @@ def initialize(context):
     # Instantiate custom gear dictionary to hold "gear global" info
     context.gear_dict = {}
 
+    # get # cpu's to set --n_cpus argument to /run.py
+    cpu_count = os.cpu_count()
+    log.info('os.cpu_count() = ' + str(cpu_count))
+    context.gear_dict['cpu_count'] = cpu_count
+
     # The main command line command to be run (just command, no arguments):
     context.gear_dict['COMMAND'] = '/run.py'
 
@@ -235,10 +240,11 @@ def execute(context, log):
 
         # Don't run if there were errors or if this is a dry run
         ok_to_run = True
+        result = sp.CompletedProcess
+        result.returncode = 1  # assume the worst
 
         if len(context.gear_dict['errors']) > 0:
             ok_to_run = False
-            result = sp.CompletedProcess
             result.returncode = 1
             log.info('Command was NOT run because of previous errors.')
 

@@ -62,6 +62,19 @@ def validate(context):
 
     I_must_not_go_on = False
 
+    if 'n_cpus' in param_list:
+
+        cpu_count = context.gear_dict['cpu_count']
+        str_cpu_count = str(cpu_count)
+
+        if param_list['n_cpus'] > cpu_count:
+            log.warning('n_cpus > number available, using ' + str_cpu_count)
+            param_list['n_cpus'] = cpu_count
+
+    else: #  Default is to use all cpus available
+        # zoom zomm
+        param_list['n_cpus'] = context.gear_dict['cpu_count']
+
     # all must be one of these strings
     if 'stages' in param_list:
 
