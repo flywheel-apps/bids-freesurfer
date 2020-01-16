@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 """ Run the gear: set up for and call command-line code """
 
 import os
@@ -6,6 +6,7 @@ import subprocess as sp
 import sys
 import logging
 import shutil
+import psutil
 
 import flywheel
 
@@ -37,7 +38,9 @@ from utils.results.zip_intermediate import zip_intermediate_selected
 
 import utils.dry_run
 
-print(sys.version_info)
+
+print(f'Python {sys.version_info}')
+
 
 def initialize(context):
 
@@ -51,11 +54,6 @@ def initialize(context):
     # Instantiate custom gear dictionary to hold "gear global" info
     context.gear_dict = {}
 
-    # get # cpu's to set --n_cpus argument to /run.py
-    cpu_count = os.cpu_count()
-    log.info('os.cpu_count() = ' + str(cpu_count))
-    context.gear_dict['cpu_count'] = cpu_count
-
     # The main command line command to be run (just command, no arguments):
     context.gear_dict['COMMAND'] = '/run.py'
 
@@ -64,10 +62,21 @@ def initialize(context):
     context.gear_dict['errors'] = []  
     context.gear_dict['warnings'] = []
 
+    # get # cpu's to set --n_cpus argument to /run.py
+    cpu_count = os.cpu_count()
+    log.info('os.cpu_count() = ' + str(cpu_count))
+    context.gear_dict['cpu_count'] = cpu_count
+
+    log.info('psutil.virtual_memory().total= {:4.1f} GiB'.format(
+                      psutil.virtual_memory().total / (1024 ** 3)))
+    log.info('psutil.virtual_memory().available= {:4.1f} GiB'.format(
+                      psutil.virtual_memory().available / (1024 ** 3)))
+
     # Get level of run from destination's parent: subject or session
     fw = context.client
     dest_container = fw.get(context.destination['id'])
     context.gear_dict['run_level'] = dest_container.parent.type
+    log.info('Running at the ' + context.gear_dict['run_level'] + ' level.')
 
     project_id = dest_container.parents.project
     context.gear_dict['project_id'] = project_id
@@ -189,7 +198,7 @@ def set_up_data(context, log):
         # list folders: The list of folders to include (otherwise all folders) e.g. ['anat', 'func']
         # **kwargs: Additional arguments to pass to download_bids_dir
 
-        folders_to_load = ['anat']
+        folders_to_load = ['anat']  # ONLY download files in anat/
 
         if context.gear_dict['run_level'] == 'project':
 
@@ -204,7 +213,7 @@ def set_up_data(context, log):
             log.info('Downloading BIDS for subject "' + 
                      context.gear_dict['subject_code'] + '"')
 
-            # filter by subject
+            # only download this subject
             download_bids(context, 
                       subjects = [context.gear_dict['subject_code']],
                       folders=folders_to_load)
@@ -214,13 +223,15 @@ def set_up_data(context, log):
             log.info('Downloading BIDS for session "' + 
                      context.gear_dict['session_label'] + '"')
 
-            # filter by session
+            # only download data for this session AND this subject
             download_bids(context, 
+                      subjects = [context.gear_dict['subject_code']],
                       sessions = [context.gear_dict['session_label']],
                       folders=folders_to_load)
 
         else:
-            msg = 'This job is not being run at the project subject or session level'
+            msg = 'This job is not being run at the project subject or ' +\
+                  'session level'
             raise TypeError(msg)
 
         # Validate Bids file heirarchy
@@ -285,13 +296,6 @@ def execute(context, log):
 
         # zip entire output/<analysis_id> folder
         zip_output(context)
-
-        # possibly save ALL intermediate output
-        if context.config['gear-save-intermediate-output']:
-            zip_all_intermediate_output(context)
-
-        # possibly save intermediate files and folders
-        zip_intermediate_selected(context)
 
         # clean up: remove output that was zipped
         if os.path.exists(context.gear_dict['output_analysisid_dir']):
