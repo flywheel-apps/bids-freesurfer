@@ -7,41 +7,36 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
 
 RUN apt-get update && \
     apt-get install -y \
-    nodejs \
-    zip && \
-    rm -rf /var/lib/apt/lists/* 
-# The last line above is to help keep the docker image smaller
+      nodejs \
+      zip && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN npm install -g bids-validator@1.3.12
 
-RUN apt-get  update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa
+# Get a new version of python that can run flywheel
+RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh && \
+    bash Miniconda3-4.5.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
+    rm Miniconda3-4.5.11-Linux-x86_64.sh
 
-# got error on this one
-#    add-apt-repository ppa:jonathonf/python-3.6
+# Set CPATH for packages relying on compiled libs (e.g. indexed_gzip)
+ENV PATH="/usr/local/miniconda/bin:$PATH" \
+    CPATH="/usr/local/miniconda/include/:$CPATH" \
+    LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    PYTHONNOUSERSITE=1
 
-RUN apt-get update && \
-    apt-get install -y python3.6 && \
-    wget https://bootstrap.pypa.io/ez_setup.py -O - | python3.6
+# Installing precomputed python packages
+RUN conda install -y python=3.7.6 && \
+    chmod -R a+rX /usr/local/miniconda; sync && \
+    chmod +x /usr/local/miniconda/bin/*; sync && \
+    conda build purge-all; sync && \
+    conda clean -tipsy && sync
 
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3.6 get-pip.py && \
-    pip3.6 install --upgrade pip 
-
-RUN apt-get update
-
-RUN pip3.6 install virtualenv 
-
-ENV VIRTUAL_ENV=/opt/venv
-RUN python3.6 -m virtualenv --python=/usr/bin/python3.6 $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-RUN pip3.6 install flywheel-sdk==10.4.1 \
-        flywheel-bids==0.8.2 && \
+# This pip is now from conda
+RUN pip install flywheel-sdk==10.7.1 \
+      flywheel-bids==0.8.2 \
+      psutil==5.6.3 && \
     rm -rf /root/.cache/pip
-
-#    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Make directory for flywheel spec (v0)
 ENV FLYWHEEL /flywheel/v0
