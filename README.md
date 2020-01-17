@@ -1,6 +1,6 @@
 # bids-freesurfer
 
-This is a [Flywheel Gear](https://github.com/flywheel-io/gears/tree/master/spec) which runs the [Freesurfer BIDS-App](https://github.com/BIDS-Apps/freesurfer) within [Flywheel](https://flywheel.io) on BIDS-curated data
+This is a [Flywheel Gear](https://github.com/flywheel-io/gears/tree/master/spec) which runs the [Freesurfer BIDS-App](https://github.com/BIDS-Apps/freesurfer) within [Flywheel](https://flywheel.io) on [BIDS-curated](https://bids.neuroimaging.io/) data.
 
 * You will need to [obtain a license](https://surfer.nmr.mgh.harvard.edu/registration.html).  It's free.
 * Once you get your license you can enter it in [three ways](https://docs.flywheel.io/hc/en-us/articles/360013235453-How-to-include-a-Freesurfer-license-file-in-order-to-run-the-fMRIPrep-gear-).
