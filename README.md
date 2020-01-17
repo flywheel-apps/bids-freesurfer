@@ -10,4 +10,8 @@ This can run at the
 [subject](https://docs.flywheel.io/hc/en-us/articles/360038261213-Run-an-analysis-gear-on-a-subject) or 
 [session](https://docs.flywheel.io/hc/en-us/articles/360015505453-Analysis-Gears) level.
 
-Please see the README at [Freesurfer BIDS-App](https://github.com/BIDS-Apps/freesurfer) for Usage information.
+### Acknowledgements
+https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation
+
+### Usage
+Please see the README at [Freesurfer BIDS-App](https://github.com/BIDS-Apps/freesurfer/blob/master/README.md#usage) for Usage information.
