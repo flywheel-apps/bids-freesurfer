@@ -33,7 +33,7 @@ RUN conda install -y python=3.7.6 && \
     conda clean -tipsy && sync
 
 # This pip is now from conda
-RUN pip install flywheel-sdk==11.2.3 \
+RUN pip install flywheel-sdk==12.0.0 \
       flywheel-bids==0.8.2 \
       psutil==5.6.3 && \
     rm -rf /root/.cache/pip

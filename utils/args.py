@@ -6,7 +6,7 @@ import logging
 import re
 import json
 
-from .licenses.freesurfer import find_freesurfer_license
+from .license.freesurfer import find_freesurfer_license
 
 
 log = logging.getLogger(__name__)
@@ -32,18 +32,11 @@ def get_inputs_and_args(context):
     for key in config.keys():
         if key[:5] == 'gear-':  # Skip any gear- parameters
             continue
-        # Use only those boolean values that are True
-        if type(config[key]) == bool:
-            if config[key]:
-                params[key] = True
-            # else ignore (could this cause a problem?)
-        else:
-            if len(key) == 1:
+        if type(config[key]) == str:
+            if config[key]:  # only use non-empty strings
                 params[key] = config[key]
-            else:
-                if config[key] != 0:  # if zero, skip and use defaults
-                    params[key] = config[key]
-                # else ignore (could this caus a problem?)
+        else:
+            params[key] = config[key]
     
     context.gear_dict['param_list'] =  params
 
