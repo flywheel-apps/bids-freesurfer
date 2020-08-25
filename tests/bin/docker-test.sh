@@ -43,19 +43,18 @@ main() {
     done
 
     VER=$(cat manifest.json | jq -r '.version')
-    DOCKER_IMAGE_NAME=$(cat manifest.json | jq '.custom."gear-builder".image')
-    echo "DOCKER_IMAGE_NAME is" $DOCKER_IMAGE_NAME
-    DOCKER_IMAGE_NAME=$( echo $DOCKER_IMAGE_NAME | tr -d '"' )
+    DOCKER_IMAGE_NAME=$(cat manifest.json | jq '.custom."gear-builder".image' | tr -d '"')
     echo "DOCKER_IMAGE_NAME is" $DOCKER_IMAGE_NAME
 
+    # split DOCKER_IMAGE_NAME by ':' and '/' to get middle part by itself
     IFS=':'
     read -a strarr <<< "$DOCKER_IMAGE_NAME"
-    echo ${strarr[0]}
+    # echo ${strarr[0]}
     IFS='/'
     read -a strarr <<< "$strarr"
-    echo ${strarr[1]}
-    DOCKER_IMAGE="flywheel/${strarr}:${DOCKER_TAG}"
-    echo "DOCKER_IMAGE is $DOCKER_IMAGE"
+    # echo ${strarr[1]}
+    TESTING_IMAGE="flywheel/${strarr[1]}:${DOCKER_TAG}"
+    echo "TESTING_IMAGE is $TESTING_IMAGE"
     IFS=''
 
 
@@ -67,11 +66,11 @@ main() {
 
         echo docker build -f "${DOCKERFILE}" \
           --build-arg DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} \
-          -t "${DOCKER_IMAGE}" .
+          -t "${TESTING_IMAGE}" .
 
         docker build -f "${DOCKERFILE}" \
           --build-arg DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} \
-          -t "${DOCKER_IMAGE}" .
+          -t "${TESTING_IMAGE}" .
 
     fi
 
@@ -79,14 +78,14 @@ main() {
         --volume "$(pwd):/src" \
         --volume "$HOME/.config/flywheel:/root/.config/flywheel" \
         "${ENTRY_POINT}" \
-        "${DOCKER_IMAGE}" \
+        "${TESTING_IMAGE}" \
         "$@"
 
     docker run -it --rm \
         --volume "$(pwd):/src" \
         --volume "$HOME/.config/flywheel:/root/.config/flywheel" \
         "${ENTRY_POINT}" \
-        "${DOCKER_IMAGE}" \
+        "${TESTING_IMAGE}" \
         "$@"
 
 }
