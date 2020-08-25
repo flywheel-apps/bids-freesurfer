@@ -350,6 +350,3 @@ if __name__ == '__main__':
         set_up_data(context, log)
 
     execute(context, log)
-
-
-# vi:set autoindent ts=4 sw=4 expandtab : See Vim, :help 'modeline'

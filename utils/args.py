@@ -63,6 +63,10 @@ def validate(context):
         if param_list['n_cpus'] > cpu_count:
             log.warning('n_cpus > number available, using ' + str_cpu_count)
             param_list['n_cpus'] = cpu_count
+        elif param_list['n_cpus'] == 0:
+            log.info("n_cpus == 0, using %d (maximum available)", 
+                context.gear_dict['cpu_count'])
+            param_list['n_cpus'] = context.gear_dict['cpu_count']
 
     else: #  Default is to use all cpus available
         # zoom zomm
