@@ -46,17 +46,9 @@ main() {
     DOCKER_IMAGE_NAME=$(cat manifest.json | jq '.custom."gear-builder".image' | tr -d '"')
     echo "DOCKER_IMAGE_NAME is" $DOCKER_IMAGE_NAME
 
-    # split DOCKER_IMAGE_NAME by ':' and '/' to get middle part by itself
-    IFS=':'
-    read -a strarr <<< "$DOCKER_IMAGE_NAME"
-    # echo ${strarr[0]}
-    IFS='/'
-    read -a strarr <<< "$strarr"
-    # echo ${strarr[1]}
-    TESTING_IMAGE="flywheel/${strarr[1]}:${DOCKER_TAG}"
+    MANIFEST_NAME=$(cat manifest.json | jq '.name'  | tr -d '"')
+    TESTING_IMAGE="flywheel/${MANIFEST_NAME}:${DOCKER_TAG}"
     echo "TESTING_IMAGE is $TESTING_IMAGE"
-    IFS=''
-
 
     if [ "${BUILD_IMAGE}" == "1" ]; then
 
@@ -71,7 +63,6 @@ main() {
         docker build -f "${DOCKERFILE}" \
           --build-arg DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} \
           -t "${TESTING_IMAGE}" .
-
     fi
 
     echo docker run -it --rm \
