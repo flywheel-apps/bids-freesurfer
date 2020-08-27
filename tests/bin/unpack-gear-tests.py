@@ -34,11 +34,11 @@ def main():
         "./gear_tests",
     ]
     if Path.cwd().parts[-3:] == ("tests", "data", "gear_tests"):
-        print(f"Packing tests in {str(Path.cwd())}")
+        print(f"Unpacking tests in {str(Path.cwd())}")
     else:
         for gtp in gear_test_paths:
             if Path(gtp).exists():
-                print(f"Packing tests in {str(Path(gtp))}")
+                print(f"Unpacking tests in {str(Path(gtp))}")
                 os.chdir(Path(gtp))
 
     if args.test == "all":
