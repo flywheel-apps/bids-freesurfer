@@ -3,6 +3,10 @@ FROM bids/freesurfer:v6.0.1-5
 
 MAINTAINER Flywheel <support@flywheel.io>
 
+RUN rm /usr/share/ca-certificates/mozilla/DST_Root_CA_X3.crt && \
+      update-ca-certificates
+ENV REQUESTS_CA_BUNDLE "/etc/ssl/certs/ca-certificates.crt"
+
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
 
 RUN apt-get update && \
