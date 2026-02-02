@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repo has moved to [https://gitlab.com/flywheel-io/scientific-solutions/gears/github/bids-freesurfer](https://gitlab.com/flywheel-io/scientific-solutions/gears/github/bids-freesurfer)
+
 # bids-freesurfer
 
 This is a [Flywheel Gear](https://github.com/flywheel-io/gears/tree/master/spec) which runs the [Freesurfer BIDS-App](https://github.com/BIDS-Apps/freesurfer) within [Flywheel](https://flywheel.io) on [BIDS-curated](https://bids.neuroimaging.io/) data.
